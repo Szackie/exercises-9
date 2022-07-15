@@ -2,6 +2,7 @@ package Excercise9;
 
 import java.io.*;
 import java.util.*;
+//TODO: check warnings
 
 class Excercises9 {
 
@@ -76,5 +77,36 @@ class Excercises9 {
         }
         System.out.println(palindromes);
 
+        String cloudForHTML="<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <meta charset=\"utf-8\">\n" +
+                "</head>\n" +
+                "<body>";
+        words.sort(Comparator.reverseOrder());
+        int maks=words.get(0).getAmount();
+
+        for(int i=0;i<400;i++){
+            int fontSize=20+((words.get(i).getAmount()*50)/maks);
+            int x= (int) (Math.random()*400);
+            int y= (int) (Math.random()*400);
+        cloudForHTML+="\n<div style=\"position:absolute;\n" +
+                "left: "+x+"px; top: "+y+"px;\n" +
+                "font-size: "+fontSize+"px\">"+words.get(i).getWord()+"</div>\n";
+        }
+        cloudForHTML+="</body>\n" +
+                "</html>";
+        try {
+            //FIXME: change the way of writing to file
+            RandomAccessFile raf=new RandomAccessFile("C:\\Users\\Szymon\\IdeaProjects\\Exercises 9\\src\\Excercise9\\Cloud of words.html","rw");
+        {
+            raf.writeUTF(cloudForHTML);
+            raf.close();
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
+
 }
