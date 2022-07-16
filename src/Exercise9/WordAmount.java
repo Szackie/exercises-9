@@ -1,4 +1,4 @@
-package Excercise9;
+package Exercise9;
 
 class WordAmount implements Comparable {
     private String word;

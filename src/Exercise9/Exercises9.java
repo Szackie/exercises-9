@@ -1,10 +1,10 @@
-package Excercise9;
+package Exercise9;
 
 import java.io.*;
 import java.util.*;
-//TODO: check warnings
 
-class Excercises9 {
+
+class Exercises9 {
 
     public static void main(String[] a) {
 
@@ -16,13 +16,14 @@ class Excercises9 {
             e.printStackTrace();
         }
 
-        String wholeText = "";
+        StringBuilder wholeText = new StringBuilder();
         while (scanner.hasNextLine())
-            wholeText += scanner.nextLine();
+            wholeText.append(scanner.nextLine());
 
+        scanner.close();
         ArrayList<WordAmount> words = new ArrayList<>();
 
-        StringTokenizer tokenizer = new StringTokenizer(wholeText, " (){}[]/\\.,;:");
+        StringTokenizer tokenizer = new StringTokenizer(wholeText.toString(), " (){}[]/\\.,;:");
         while (tokenizer.hasMoreTokens()) {
             WordAmount token = new WordAmount(tokenizer.nextToken(), 1);
 
@@ -44,26 +45,16 @@ class Excercises9 {
             System.out.println(words.get(i));
 
         System.out.println("\n20 longest words\n");
-        words.sort(new Comparator<WordAmount>() {
-            @Override
-            public int compare(WordAmount o1, WordAmount o2) {
-                if (o1.getWord().length() < o2.getWord().length())
-                    return 1;
-                else if (o1.getWord().length() == o2.getWord().length())
-                    return 0;
-                else
-                    return -1;
-            }
-        });
+        words.sort((o1, o2) -> Integer.compare(o2.getWord().length(), o1.getWord().length()));
 
         for (int i = 0; i < 20; i++)
             System.out.println(words.get(i));
 
         System.out.println("\nAll palindromes\n");
         ArrayList<WordAmount> palindromes = new ArrayList<>();
-        for (int i = 0; i < words.size(); i++) {
+        for (WordAmount wordAmount : words) {
             boolean isPalindrome = true;
-            String word = words.get(i).getWord();
+            String word = wordAmount.getWord();
             for (int j = 0; j < word.length() / 2; j++) {
                 if (!((word.charAt(j)) == (word.charAt(word.length() - 1 - j)))) {
                     isPalindrome = false;
@@ -72,36 +63,37 @@ class Excercises9 {
 
             }
             if (isPalindrome && word.length() > 1)
-                palindromes.add(words.get(i));
+                palindromes.add(wordAmount);
 
         }
         System.out.println(palindromes);
 
-        String cloudForHTML="<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<head>\n" +
-                "    <meta charset=\"utf-8\">\n" +
-                "</head>\n" +
-                "<body>";
+        StringBuilder cloudForHTML= new StringBuilder("""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                </head>
+                <body>""");
         words.sort(Comparator.reverseOrder());
         int maks=words.get(0).getAmount();
 
         for(int i=0;i<400;i++){
             int fontSize=20+((words.get(i).getAmount()*50)/maks);
-            int x= (int) (Math.random()*400);
-            int y= (int) (Math.random()*400);
-        cloudForHTML+="\n<div style=\"position:absolute;\n" +
-                "left: "+x+"px; top: "+y+"px;\n" +
-                "font-size: "+fontSize+"px\">"+words.get(i).getWord()+"</div>\n";
+            double angle=Math.random()*360;
+            double radius=Math.random()*400;
+            int x= (int) (Math.cos(Math.toRadians(angle))*radius)+400;
+            int y= (int) (Math.sin(Math.toRadians(angle))*radius)+400;
+     //       int y= (int) (Math.random()*400);
+        cloudForHTML.append("\n<div style=\"position:absolute;\n" + "left: ").append(x).append("px; top: ").append(y).append("px;\n").append("font-size: ").append(fontSize).append("px\">").append(words.get(i).getWord()).append("</div>\n");
         }
-        cloudForHTML+="</body>\n" +
-                "</html>";
+        cloudForHTML.append("</body>\n" + "</html>");
         try {
-            //FIXME: change the way of writing to file
-            RandomAccessFile raf=new RandomAccessFile("C:\\Users\\Szymon\\IdeaProjects\\Exercises 9\\src\\Excercise9\\Cloud of words.html","rw");
+
+           PrintWriter writer=new PrintWriter("C:\\Users\\Szymon\\IdeaProjects\\Exercises 9\\src\\Exercise9\\Cloud of words.html");
         {
-            raf.writeUTF(cloudForHTML);
-            raf.close();
+            writer.write(cloudForHTML.toString());
+            writer.close();
         }
         } catch (IOException e) {
             e.printStackTrace();
